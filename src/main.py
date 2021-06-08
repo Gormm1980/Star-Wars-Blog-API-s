@@ -38,6 +38,34 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+@app.route('/character', methods=['GET','POST'])
+def handle_character():
+
+    response_body = {
+        "msg": "Hello, this is your GET /user response "
+    }
+
+    return jsonify(response_body), 200
+
+@app.route('/planets', methods=['GET'])
+def handle_planets():
+
+    response_body = {
+        "msg": "Hello, this is your GET /user response "
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/favorites', methods=['GET','POST'])
+def handle_favorites():
+
+    response_body = {
+        "msg": "Hello, this is your GET /user response "
+    }
+
+    return jsonify(response_body), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

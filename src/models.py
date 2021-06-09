@@ -9,8 +9,8 @@ class BasicModel():
         
 
     @classmethod
-    def get_one(cls,id):
-        return cls.query.get(id)
+    def get_one(cls,model_id):
+        return cls.query.filter_by(id = model_id).first()
     
     @classmethod
     def delete(cls,id):
@@ -31,14 +31,25 @@ class User(db.Model, BasicModel):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
-class Character(db.Model, BasicModel):
-    id_character = db.Column(db.Integer, primary_key=True)
+class People(db.Model, BasicModel):
+    id_people = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String (35))
     gender = db.Column(db.String (10))
     homeworld = db.Column(db.String (35))
     height = db.Column(db.Integer)
     species = db.Column(db.String (35))
 
+    def new_Session(self):        
+        db.session.add(self)
+        db.session.commit()
+    
+    def set_with_people(self,json):
+        self.name = json["name"]
+        self.gender = json["gender"]
+        self.homeworld = json["homeworld"]
+        self.gender = json["gender"]
+        self.height = json["height"]
+        self.species = json["species"]
 
     # def __repr__(self):
     #     return '<User %r>' % self.username
@@ -75,25 +86,16 @@ class Planets(db.Model, BasicModel):
             # do not serialize the password, its a security breach
         }
     
-def session(self):        
+    def new_Session(self):        
         db.session.add(self)
         db.session.commit()
-    
-def set_with_character(self,json):
-        self.name = json["name"]
-        self.gender = json["gender"]
-        self.homeworld = json["homeworld"]
-        self.gender = json["gender"]
-        self.height = json["height"]
-        self.species = json["species"]
 
-def set_with_planet(self,json):
+    def set_with_planet(self,json):
         self.name = json["name"]
         self.climate = json["climate"]
         self.diameter = json["diameter"]
         self.population = json["population"]
         self.terrain = json["terrain"]
-       
 
 # class favorites(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)

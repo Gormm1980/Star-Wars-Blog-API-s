@@ -13,10 +13,11 @@ class BasicModel():
         return cls.query.filter_by(id = model_id).first()
     
     @classmethod
-    def delete(cls,id):
-        return cls.query.delete(id)
+    def delete(cls,self):
+        return cls.query.delete()
 
 class User(db.Model, BasicModel):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
@@ -32,6 +33,7 @@ class User(db.Model, BasicModel):
             # do not serialize the password, its a security breach
         }
 class People(db.Model, BasicModel):
+    __tablename__ = 'people'
     id_people = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String (35))
     gender = db.Column(db.String (10))
@@ -39,7 +41,7 @@ class People(db.Model, BasicModel):
     height = db.Column(db.Integer)
     species = db.Column(db.String (35))
 
-    def new_Session(self):        
+    def db_post(self):        
         db.session.add(self)
         db.session.commit()
     
@@ -47,24 +49,22 @@ class People(db.Model, BasicModel):
         self.name = json["name"]
         self.gender = json["gender"]
         self.homeworld = json["homeworld"]
-        self.gender = json["gender"]
         self.height = json["height"]
         self.species = json["species"]
-
-    # def __repr__(self):
-    #     return '<User %r>' % self.username
+        return self
 
     def serialize(self):
         return {
-            "id_character": self.id_character,
+            "id_people": self.id_people,
             "name": self.name,
             "gender": self.gender,
             "homeworld": self.homeworld,
-            "heigth": self.heigth,
+            "height": self.height,
             "species": self.species
             # do not serialize the password, its a security breach
         }
 class Planets(db.Model, BasicModel):
+    __tablename__ = 'planets'
     id_planet = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String (35))
     climate = db.Column(db.String (10))
@@ -72,12 +72,9 @@ class Planets(db.Model, BasicModel):
     population = db.Column(db.Integer)
     terrain = db.Column(db.String (35))
 
-    # def __repr__(self):
-    #     return '<User %r>' % self.username
-
     def serialize(self):
         return {
-            "id_planet": self.id_planet,
+            "id_pleanets": self.id_planets,
             "name": self.name,
             "climate": self.climate,
             "diameter": self.diameter,
@@ -86,7 +83,7 @@ class Planets(db.Model, BasicModel):
             # do not serialize the password, its a security breach
         }
     
-    def new_Session(self):        
+    def db_post(self):        
         db.session.add(self)
         db.session.commit()
 
@@ -96,27 +93,4 @@ class Planets(db.Model, BasicModel):
         self.diameter = json["diameter"]
         self.population = json["population"]
         self.terrain = json["terrain"]
-
-# class favorites(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     id_fav_planets = db.Column(db.Integer, ForeignKey('planets.id_planet'))
-#     planets = db.relationship(Planets)
-#     id_fav_characters = db.Column(db.Integer, ForeignKey('characters.id_character'))
-#     character = db.relationship(Character)
-#     favorites = db.Column(db.Integer, ForeignKey('user.id_user'))
-#     user = db.relationship(User)
-
-#     # def __repr__(self):
-#     #     return '<User %r>' % self.username
-
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "id_fav_planets": self.id_fav_planets,
-#             "planets ": self.planets,
-#             "id_fav_characters": self.id_fav_characters,
-#             "character": self.character,
-#             "favorites": self.favorites,
-#             "user":self.user
-#             # do not serialize the password, its a security breach
-#         }
+        return self

@@ -22,6 +22,25 @@ class User(db.Model, BasicModel):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    token = Column(String(250), nullable=True)
+    favorite_planets = db.relationship('Favorite_Planet', backref='user', lazy=True)
+
+
+    @staticmethod
+    def login_credentials(email,password):
+        return User.query.filter_by(email=email).filter_by(password=password).first()
+    
+    
+    def user_have_token(self,token):
+        return User.query.filter_by(token=self.token).first()
+   
+    def assign_token(self,token):
+        self.token = token
+        db.session.add(self)
+        db.session.commit()
+    
+    def check_password(self, password_param):
+        return safe_str_cmp(self.password.encode('utf-8'), password_param.encode('utf-8'))
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -94,3 +113,20 @@ class Planets(db.Model, BasicModel):
         self.population = json["population"]
         self.terrain = json["terrain"]
         return self
+        
+class Favorite_Planet(BaseModel,db.Model):
+    __tablename__ = 'favorite_planet'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, db.ForeignKey('user.id'))
+    planet_id = Column(Integer, db.ForeignKey('planets.id'))
+    
+
+    def __repr__(self):
+        return '<Favorite_Planets %r>' % self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "planet_id":self.planet_id,
+            }

@@ -22,7 +22,7 @@ class User(db.Model, BasicModel):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    token = Column(String(250), nullable=True)
+    token = db.Column(db.String(250), nullable=True)
     favorite_planets = db.relationship('Favorite_Planet', backref='user', lazy=True)
 
 
@@ -114,15 +114,12 @@ class Planets(db.Model, BasicModel):
         self.terrain = json["terrain"]
         return self
         
-class Favorite_Planet(BaseModel,db.Model):
+class Favorite_Planet(BasicModel,db.Model):
     __tablename__ = 'favorite_planet'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, db.ForeignKey('user.id'))
-    planet_id = Column(Integer, db.ForeignKey('planets.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id_planet'))
     
-
-    def __repr__(self):
-        return '<Favorite_Planets %r>' % self.id
 
     def serialize(self):
         return {
